@@ -68,5 +68,7 @@ catch {
 }
 finally {
     Stop-Transcript
-    Read-Host "Press Enter to exit"
+    # if ($Host.Name -like "*Console*") {
+    #     Read-Host "Press Enter to exit"
+    # }
 }

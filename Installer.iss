@@ -25,6 +25,8 @@ Source: "Publish\Api\*"; DestDir: "C:\inetpub\wwwroot\Api"; Flags: recursesubdir
 Source: "setup.ps1"; DestDir: "{app}"; Flags: ignoreversion
 
 [Code]
+#include "UninstallIISCode.iss"
+
 var
   InstadataPortPage: TInputQueryWizardPage;
   InventoryPortPage: TInputQueryWizardPage;
@@ -32,25 +34,21 @@ var
 
 procedure InitializeWizard;
 begin
-  // Page for InstadataInventory port
   InstadataPortPage := CreateInputQueryPage(wpSelectDir,
     'InstadataInventory Configuration', 'InstadataInventory Port',
     'Choose the port for InstadataInventory:');
   InstadataPortPage.Add('Port:', False);
 
-  // Page for InventoryManager port
   InventoryPortPage := CreateInputQueryPage(InstadataPortPage.ID,
     'InventoryManager Configuration', 'InventoryManager Port',
     'Choose the port for InventoryManager:');
   InventoryPortPage.Add('Port:', False);
 
-  // Page for API port
   ApiPortPage := CreateInputQueryPage(InventoryPortPage.ID,
     'API Configuration', 'API Port',
     'Choose the port for the API:');
   ApiPortPage.Add('Port:', False);
 
-  // Default values
   InstadataPortPage.Values[0] := '8080';
   InventoryPortPage.Values[0] := '8081';
   ApiPortPage.Values[0]       := '8090';
@@ -75,4 +73,4 @@ end;
 ; Ejecutar el script PowerShell al final, en 64 bits
 Filename: "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"; \
   Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\setup.ps1"" -InstadataPath ""C:\inetpub\wwwroot\InstadataInventory"" -InventoryPath ""C:\inetpub\wwwroot\InventoryManager"" -ApiPath ""C:\inetpub\wwwroot\Api"" -InstadataPort {code:GetInstadataPort} -InventoryPort {code:GetInventoryPort} -ApiPort {code:GetApiPort}"; \
-  Flags: waituntilterminated
+  Flags: waituntilterminated runhidden runascurrentuser
